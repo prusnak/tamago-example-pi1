@@ -10,8 +10,8 @@ BUILD_DATE = $(shell /bin/date -u "+%Y-%m-%d %H:%M:%S")
 BUILD = ${BUILD_USER}@${BUILD_HOST} on ${BUILD_DATE}
 REV = $(shell git rev-parse --short HEAD 2> /dev/null)
 
-APP := example-pi-2
-GOENV := GO_EXTLINK_ENABLED=0 CGO_ENABLED=0 GOOS=tamago GOARM=7 GOARCH=arm
+APP := example-pi-1
+GOENV := GO_EXTLINK_ENABLED=0 CGO_ENABLED=0 GOOS=tamago GOARM=5 GOARCH=arm
 TEXT_START := 0x00010000 # Space for interrupt vector, etc
 
 GOFLAGS := -ldflags "-s -w -T $(TEXT_START) -E _rt0_arm_tamago -R 0x1000 -X 'main.Build=${BUILD}' -X 'main.Revision=${REV}'"
@@ -61,7 +61,7 @@ $(APP).bin: $(APP)
 	    -j .bss --set-section-flags .bss=alloc,load,contents \
 	    -j .noptrbss --set-section-flags .noptrbss=alloc,load,contents\
 	    $(APP) -O binary $(APP).o
-	${CROSS_COMPILE}gcc -D ENTRY_POINT=`${CROSS_COMPILE}readelf -e example-pi-2 | grep Entry | sed 's/.*\(0x[a-zA-Z0-9]*\).*/\1/'` -c boot.S -o boot.o
+	${CROSS_COMPILE}gcc -D ENTRY_POINT=`${CROSS_COMPILE}readelf -e example-pi-1 | grep Entry | sed 's/.*\(0x[a-zA-Z0-9]*\).*/\1/'` -c boot.S -o boot.o
 	${CROSS_COMPILE}objcopy boot.o -O binary stub.o
 	# Truncate pads the stub out to correctly align the binary
 	# 32768 = 0x10000 (TEXT_START) - 0x8000 (Default kernel load address)

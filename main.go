@@ -8,7 +8,7 @@ import (
 	"time"
 
 	pi "github.com/f-secure-foundry/tamago/board/raspberrypi"
-	"github.com/f-secure-foundry/tamago/board/raspberrypi/pi2"
+	"github.com/f-secure-foundry/tamago/board/raspberrypi/pi1"
 )
 
 func rng() {
@@ -60,9 +60,9 @@ func ram() {
 	log.Println("-- RAM ---------------------------------------------------------------")
 
 	// Check GC is working by forcing more total allocation than available
-	allocateAndWipe(700)
+	allocateAndWipe(400)
 	runtime.GC()
-	allocateAndWipe(700)
+	allocateAndWipe(400)
 }
 
 func watchdog() {
@@ -96,7 +96,7 @@ func main() {
 
 	log.Println("Flashing the LEDs")
 
-	board := pi2.Board
+	board := pi1.Board
 
 	ledOn := false
 	for {
